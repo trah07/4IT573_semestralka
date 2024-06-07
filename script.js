@@ -1,5 +1,19 @@
+async function readTextFile(file) {
+  const response = await fetch(file);
+  const text = await response.text();
+  return text.trim();
+}
+
+readTextFile('api_key.txt')
+  .then((apiKey) => {
+    const apiKeyConst = apiKey;
+    fetchMoviesNowPlaying(apiKeyConst);
+  })
+  .catch((error) => {
+    console.error('Error reading file:', error);
+  });
+
 const apiBaseUrl = 'https://api.themoviedb.org/3';
-const apiKey = '3d251489cb4619e62952ca9c46ae86de';
 const imageBaseUrl = 'https://image.tmdb.org/t/p/w300';
 
 const moviesGrid = document.getElementById('movies-grid');
@@ -7,7 +21,7 @@ const searchInput = document.getElementById('search-input');
 const searchForm = document.getElementById('search-form');
 const categoryTitle = document.getElementById('category-title');
 
-async function fetchMoviesNowPlaying() {
+async function fetchMoviesNowPlaying(apiKey) {
   const response = await fetch(
     `${apiBaseUrl}/movie/now_playing?api_key=${apiKey}`
   );
@@ -45,6 +59,14 @@ function handleSearchFormSubmit(event) {
   const searchQuery = searchInput.value;
   const movies = searchMovies(searchQuery);
   displayMovies(movies);
+}
+
+async function getImdbId(movieId) {
+  const response = await fetch(
+    `${apiBaseUrl}/movie/${movieId}/external_ids?api_key=${apiKey}`
+  );
+  const jsonResponse = await response.json();
+  console.log(jsonResponse);
 }
 
 searchForm.addEventListener('submit', handleSearchFormSubmit);
