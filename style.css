@@ -55,6 +55,11 @@ body {
     color: lightgrey;
 }
 
+.movie-card a {
+    text-decoration: none;
+    color: lightgrey;
+}
+
 #category-title {
     margin-left: 20vW;
     color: white;
